@@ -1,0 +1,361 @@
+Openshift Code Ready Containers CRC How to
+
+This is the second portion of the instructions to install Openshift cluster on your linux platform. 
+There are versions for Linux, Mac-OS and Windows and you can install on your laptop if desired. 
+
+Getting started. 
+You will need a RedHat.com  account and github.com account if you don’t already have one.
+Please see the lesson-1-OCP-CRC-Intro.txt in this repo for details. 
+
+Linux Install portion.
+CodeReady Containers requires the libvirt and NetworkManager packages to be installed on the host system prior to its setup.
+
+1. Installing libvirt and kvm to build virtual machines.
+
+#    sudo yum install qemu-kvm qemu-img libvirt virt-install libvirt-client virt-manager  libvirt-devel libvirt-daemon-kvm  -y
+Enable libvirt 
+#    systemctl enable libvirtd
+#    systemctl start libvirtd
+#    systemctl status libvirtd
+
+2. Install Openshift CodeReady Container CRC
+     Download the latest binary file for CRC from the below URL.
+
+     NOTE: There are version for Windows or Linix or Mac-os this note is for linux.
+     to View all versions from Web Brrowser go to https://mirror.openshift.com/pub/openshift-v4/clients/crc/latest/
+
+     This link is specific to the linux version,  from your linux host download the package. 
+      use Webget (wget to download the package)
+      # wget https://mirror.openshift.com/pub/openshift-v4/clients/crc/latest/crc-linux-amd64.tar.xz
+
+3. Extract the downloaded CodeReady Containers archive.
+     # tar xvf crc-linux-amd64.tar.xz
+
+4. Place the binary in your $PATH .
+     # cd crc*/
+     # sudo cp crc /usr/local/bin
+     Confirm installation by checking the software version.
+     # $ crc version
+     crc version: 1.7.0+fa7e558
+     OpenShift version: 4.3.1 (embedded in binary)
+
+You will also need a Web Browser : There are several options here is How to install Google Chrome on Linux. 
+5. Enable Google YUM Repository
+     #  vi /etc/yum.repos.d/google-chrome.repo
+Populate the file with , cut and paste or vi the file
+
+cat <<EOF > /etc/yum.repos.d/google-chrome.repo
+[google-chrome]
+name=google-chrome
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
+EOF
+
+Save the file, 
+
+6. Install Google Chrome 
+     Find it,     # yum info google-chrome-stable
+     Install it,  # yum install google-chrome-stable
+     Update it, # # yum update google-chrome-stable
+
+Note: If you want to install this on a remote linux station and work remotely,
+            from a Windows Laptop you can install a X-viewer  like “Xming”
+
+7. To view crc commands help page, run:
+     $ crc --help 
+     CodeReady Containers is a tool that manages a local OpenShift 4.x cluster optimized for testing and development purposes
+
+Usage:
+  crc [flags]
+  crc [command]
+
+Available Commands:
+  config      Modify crc configuration
+  console     Open the OpenShift Web Console in the default browser
+  delete      Delete the OpenShift cluster
+  help        Help about any command
+  ip          Get IP address of the running OpenShift cluster
+  oc-env      Add the 'oc' binary to PATH
+  setup       Set up prerequisites for the OpenShift cluster
+  start       Start the OpenShift cluster
+  status      Display status of the OpenShift cluster
+  stop        Stop the OpenShift cluster
+  version     Print version information
+
+Flags:
+  -f, --force              Forcefully perform an action
+  -h, --help               help for crc
+      --log-level string   log level (e.g. "debug | info | warn | error") (default "info")
+
+
+8. Deploy CodeReady Containers virtual machine.
+
+    Run the  crc setup command to set up your host operating system for the CodeReady Containers virtual machine.
+
+    # $ crc setup
+
+   The installer will check for setup requirements before installation.
+
+INFO Checking if running as non-root              
+INFO Caching oc binary                            
+INFO Setting up virtualization                    
+INFO Setting up KVM                               
+INFO Installing libvirt service and dependencies  
+INFO Adding user to libvirt group                 
+INFO Enabling libvirt                             
+INFO Starting libvirt service                     
+INFO Will use root access: start libvirtd service 
+INFO Checking if a supported libvirt version is installed 
+INFO Installing crc-driver-libvirt                
+INFO Removing older system-wide crc-driver-libvirt 
+INFO Setting up libvirt 'crc' network             
+INFO Starting libvirt 'crc' network               
+INFO Checking if NetworkManager is installed      
+INFO Checking if NetworkManager service is running 
+INFO Writing Network Manager config for crc       
+INFO Will use root access: write NetworkManager config in /etc/NetworkManager/conf.d/crc-nm-dnsmasq.conf 
+INFO Will use root access: execute systemctl daemon-reload command 
+INFO Will use root access: execute systemctl stop/start command 
+INFO Writing dnsmasq config for crc               
+INFO Will use root access: write dnsmasq configuration in /etc/NetworkManager/dnsmasq.d/crc.conf 
+INFO Will use root access: execute systemctl daemon-reload command 
+INFO Will use root access: execute systemctl stop/start command 
+INFO Unpacking bundle from the CRC binary         
+
+9.  Once the Setup is complete, run the command below to start the OpenShift cluster in your Laptop machine.
+
+$ crc start
+INFO Checking if running as non-root              
+INFO Checking if oc binary is cached              
+INFO Checking if Virtualization is enabled        
+INFO Checking if KVM is enabled                   
+INFO Checking if libvirt is installed             
+INFO Checking if user is part of libvirt group    
+INFO Checking if libvirt is enabled               
+INFO Checking if libvirt daemon is running        
+INFO Checking if a supported libvirt version is installed 
+INFO Checking if crc-driver-libvirt is installed  
+INFO Checking if libvirt 'crc' network is available 
+INFO Checking if libvirt 'crc' network is active  
+INFO Checking if NetworkManager is installed      
+INFO Checking if NetworkManager service is running 
+INFO Checking if /etc/NetworkManager/conf.d/crc-nm-dnsmasq.conf exists 
+INFO Checking if /etc/NetworkManager/dnsmasq.d/crc.conf exists 
+? Image pull secret [? for help] *
+
+Please note that a valid OpenShift user pull secret is required during installation. The pull secret can be copied or downloaded from the Pull Secret section of the Install on Laptop: Red Hat CodeReady Containers page on cloud.redhat.com.
+
+Paste the pulling secret when prompted, then cluster setup will continue.
+
+INFO Extracting bundle: crc_libvirt_4.3.1.crcbundle ... 
+INFO Creating CodeReady Containers VM for OpenShift 4.3.1... 
+INFO Verifying validity of the cluster certificates ... 
+INFO Check internal and public DNS query ...      
+INFO Copying kubeconfig file to instance dir ...  
+INFO Adding user's pull secret and cluster ID ... 
+INFO Starting OpenShift cluster ... [waiting 3m]  
+INFO Then you can access it by running 'oc login -u developer -p developer https://api.crc.testing:6443' 
+INFO To login as an admin, username is 'kubeadmin' and password is UMeRe-hBQAi-JJ4Bi-8ynRD 
+INFO                                              
+INFO You can now run 'crc console' and use these credentials to access the OpenShift web console 
+Started the OpenShift cluster
+WARN The cluster might report a degraded or error state. This is expected since several operators have been disabled to lower the resource usage. For more information, please consult the documentation 
+
+Access details and credentials are printed after a successful setup.
+
+INFO Then you can access it by running 'oc login -u developer -p developer https://api.crc.testing:6443' 
+INFO To login as an admin, username is 'kubeadmin' and password is UMeRe-hBQAi-JJ4Bi-8ynRD
+INFO You can now run 'crc console' and use these credentials to access the OpenShift web console
+
+10. To be able to access your cluster, first set up your environment by running.
+
+     # $ crc oc-env
+        export PATH="/home/jmutai/.crc/bin:$PATH"
+        eval $(crc oc-env)
+
+
+11. Run the commands printed in your terminal or add them to your ~/.bashrc or ~/.zshrc file, then source it.
+
+      # $ vim ~/.bashrc
+        export PATH="~/.crc/bin:$PATH"
+        eval $(crc oc-env)
+
+        -- Then source ---
+        $ source ~/.bashrc 
+
+12. Login as Admin using command printed out:
+
+        $ oc login -u kubeadmin -p UMeRe-hBQAi-JJ4Bi-8ynRD https://api.crc.testing:6443
+        The server uses a certificate signed by an unknown authority.
+        You can bypass the certificate check, but any data you send to the server could be intercepted by others.
+        Use insecure connections? (y/n): y
+----------------------------------------------------------------------------
+Login successful.
+
+You have access to 53 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
+Using project "default".
+
+Confirm cluster setup.
+
+13.    $ oc cluster-info
+        Kubernetes master is running at https://api.crc.testing:6443
+
+        To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+14.   $ oc get nodes
+        NAME                 STATUS   ROLES           AGE     VERSION
+        crc-2n9vw-master-0   Ready    master,worker   5d13h   v1.14.6+6ac6aa4b0
+
+15. $ oc config view
+        apiVersion: v1
+        clusters:
+- cluster:
+    insecure-skip-tls-verify: true
+    server: https://api.crc.testing:6443
+  name: api-crc-testing:6443
+- cluster:
+    certificate-authority: /home/jmutai/.minikube/ca.crt
+    server: https://192.168.39.35:8443
+  name: minikube
+contexts:
+- context:
+    cluster: api-crc-testing:6443
+    user: developer/api-crc-testing:6443
+  name: /api-crc-testing:6443/developer
+- context:
+    cluster: api-crc-testing:6443
+    namespace: default
+    user: kube:admin/api-crc-testing:6443
+  name: default/api-crc-testing:6443/kube:admin
+- context:
+    cluster: minikube
+    user: minikube
+  name: minikube
+current-context: default/api-crc-testing:6443/kube:admin
+kind: Config
+preferences: {}
+users:
+- name: developer/api-crc-testing:6443
+  user:
+    token: Pvqjq-b5HkV9UQtOYH8P9yOtm17MrOUVs-eaiSeQqXA
+- name: kube:admin/api-crc-testing:6443
+  user:
+    token: LDrdGJMUpPUAxtg0IvWynedbtSBLjs8S2S6kdpvbMU8
+- name: minikube
+  user:
+    client-certificate: /home/jmutai/.minikube/client.crt
+    client-key: /home/jmutai/.minikube/client.key
+
+To view cluster operators:
+
+16. $ oc get clusteroperators
+NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE
+authentication                             4.3.1     True        False         False      23d
+cloud-credential                           4.3.1     True        False         False      23d
+cluster-autoscaler                         4.3.1     True        False         False      23d
+console                                    4.3.1     True        False         False      23d
+dns                                        4.3.1     True        False         False      16m
+image-registry                             4.3.1     True        False         False      23d
+ingress                                    4.3.1     True        False         False      23d
+insights                                   4.3.1     True        False         False      23d
+kube-apiserver                             4.3.1     True        False         False      23d
+kube-controller-manager                    4.3.1     True        False         False      23d
+kube-scheduler                             4.3.1     True        False         False      23d
+machine-api                                4.3.1     True        False         False      23d
+machine-config                             4.3.1     True        False         False      23d
+marketplace                                4.3.1     True        False         False      15m
+monitoring                                 4.3.1     True        False         False      23d
+network                                    4.3.1     True        False         False      23d
+node-tuning                                4.3.1     True        False         False      16m
+openshift-apiserver                        4.3.1     True        False         False      23d
+openshift-controller-manager               4.3.1     True        False         False      10m
+openshift-samples                          4.3.1     True        False         False      23d
+operator-lifecycle-manager                 4.3.1     True        False         False      23d
+operator-lifecycle-manager-catalog         4.3.1     True        False         False      23d
+operator-lifecycle-manager-packageserver   4.3.1     True        False         False      15m
+service-ca                                 4.3.1     True        False         False      23d
+service-catalog-apiserver                  4.3.1     True        False         False      23d
+service-catalog-controller-manager         4.3.1     True        False         False      23d
+storage                                    4.3.1     True        False         False      23d
+
+17.  Access OpenShift Cluster
+
+        You can access the OpenShift cluster deployed locally from CLI or by opening the OpenShift 4.x console on your web browser.
+
+        $ oc login -u developer -p developer https://api.crc.testing:6443
+        The server uses a certificate signed by an unknown authority.
+        You can bypass the certificate check, but any data you send to the server could be intercepted by others.
+        Use insecure connections? (y/n): y
+
+        Login successful.
+
+        You don't have any projects. You can try to create a new project, by running
+
+ 18.   oc new-project <projectname>
+---------------------------------------------------------------------
+
+19. Access as Cluster admin:
+
+	$ oc login -u kubeadmin -p  UMeRe-hBQAi-JJ4Bi-8ynRD https://api.crc.testing:6443
+	Login successful.
+	You have access to 51 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
+	Using project "default".
+
+20. To open the console from your default web browser, run:
+
+	$ crc console
+
+	Login with the credentials printed earlier.
+
+Now you have a cluster up and running.
+The mikemcclure clone that you downloaded also has a 
+(Red_Hat_CodeReady_Containers-1.0-Getting_Started_Guide-en-US.pdf)
+
+21. Use the CRC Getting started guide with your cluster to start your learning of Openshift. 
+
+To stop your OpenShift cluster, run the command:
+
+22. $ crc stop
+	Stopping the OpenShift cluster, this may take a few minutes...
+	Stopped the OpenShift cluster
+
+23.  The virtual machine can be started any time by running the command:
+
+$ crc start 
+INFO Checking if running as non-root              
+INFO Checking if oc binary is cached              
+INFO Checking if Virtualization is enabled        
+INFO Checking if KVM is enabled                   
+INFO Checking if libvirt is installed             
+INFO Checking if user is part of libvirt group    
+INFO Checking if libvirt is enabled               
+INFO Checking if libvirt daemon is running        
+INFO Checking if a supported libvirt version is installed 
+INFO Checking if crc-driver-libvirt is installed  
+INFO Checking if libvirt 'crc' network is available 
+INFO Checking if libvirt 'crc' network is active  
+INFO Checking if NetworkManager is installed      
+INFO Checking if NetworkManager service is running 
+INFO Checking if /etc/NetworkManager/conf.d/crc-nm-dnsmasq.conf exists 
+INFO Checking if /etc/NetworkManager/dnsmasq.d/crc.conf exists 
+INFO Starting CodeReady Containers VM for OpenShift 4.2.8... 
+INFO Verifying validity of the cluster certificates ... 
+INFO Check internal and public DNS query ...      
+INFO Starting OpenShift cluster ... [waiting 3m]
+INFO                                              
+INFO To access the cluster, first set up your environment by following 'crc oc-env' instructions 
+INFO Then you can access it by running 'oc login -u developer -p developer https://api.crc.testing:6443' 
+INFO To login as an admin, username is 'kubeadmin' and password is UMeRe-hBQAi-JJ4Bi-8ynRD 
+INFO                                              
+...
+
+24. Deleting CodeReady Containers virtual machine
+
+	If you want to delete an existing CodeReady Containers virtual machine, run:
+
+	$ crc delete
+
+End of course.. Mike McCLure mikemcclure@us.ibm.com

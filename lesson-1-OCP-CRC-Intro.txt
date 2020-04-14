@@ -1,0 +1,96 @@
+Openshift and IBM Storage Enablement Series	                 
+Openshft Code Ready Containers. 
+
+Mike Mclure Apr 2020.
+
+In this session we will create a few Needed accounts, then  Perform the prepereration steps and then install Openshift 4.3 Cluster on your laptop
+or workstation from Openshift Code ready Containers (CRC). 
+There is a vesion for Linux, Mac-OS and Windows however this session will explain the linux process (rhel ). . 
+
+If  you have a linux laptop or workstation or windows running vmware with a linux virtual machine. 
+We will get you to a working OCP cluster with administration guide for your own learning lab. 
+If you do not have any form of linux or vm platform contact me and I will build you a vm to use to learn. 
+
+1. The process will be to Create or verify a redhat developer or BP account. 
+2. Create an free Github.com account. 
+3. RedHat Subscription manager walk thru for prereqs. 
+4. Learn to use github with the clone process. 
+5. Install Openshift 4.3 cluster from CRC
+6. Log into your own cluster wit the administration guide to start learning. 
+Less than one hour. 
+
+Lets get started. 
+Redhat Account, If you already have one skip it. 
+1. Go to https://www.openshift.com 
+	go to login -> New to Red Hat  -> Register ->ccount Type Corperate. 
+                   Fill out all the information create the account -> verify email they send, Done.
+
+Github.com account, If you already have one skip it.
+2. Go to https://github.com
+                   go to Sign up for GitHub -. Pick a user name -> enter email and PW, Done
+     Github is a automation and sharred repository site to streamline access to data. 
+
+ You will need putty or some terminal emulation, If you already have one skip it.
+3. go to https://putty.org
+                   go to You can Download PUTTY here 
+                   Download and install putty for your platform. 
+
+Detemine how you want to access your Openshift Learning Lab. 
+I would suggest some form of linux port, either laptop or workstation or vm.
+If you have a Mac or Windows platform you can also run those flavors or 
+run a VM platform like VMware Workstation to run a linux guest. 
+
+In this case I wil be using a rhel linux image on a windows laptop. 
+
+3. Log into your linux station/laptop/desktop/server/VM whatever you are using. 
+     preferably rhel based to align with the training. 
+
+
+Login to redhat subscription manager with your Redhat account name ans pw.
+4. subscription-manager register --username='your-RHN-login' 
+    #password 'your-RHN-password'
+
+List available subscriptions.
+ 5. subscription-manager list --available
+
+Pick and attach a pool
+ 6.  subscription-manager attach --pool=8a85f99970d04f1501710c0800b14e00
+
+Enable the base repositories for your verssion of linux.
+7.  subscription-manager repos --enable=rhel-7-server-rpms
+      subscription-manager repos --enable=rhel-7-server-devtools-rpms
+      subscription-manager repos --enable=rhel-7-server-optional-rpms
+
+Update your OS to get up to date.
+8. yum update -y 
+You will probably have a list of updates, when it completes reboot and log back in.
+
+Install the following items to access this course materials. 
+9.  # yum install -y git wget 
+
+Make a directory for this training session and cd into it. 
+10.   # mkdir crc && cd crc
+
+You should have already opened a github account and installed git and wget.
+Clone this github repo. you can do this without a github account but you will need it for other things.
+
+From the web you can find todays material by going to : https://github.com/mikemcclure-ibm 
+click on the reporitries tab and select Code-Ready-Containers-linux, then you can either download it as a zip
+file if you have Windows or Mac-os or clone it to linux.
+
+To finish up this linux prep portion clone this repo to your lptop.
+11. # git clone https://github.com/mikemcclure-ibm/Code-Ready-Containers-linux.git
+          
+Now you have the Instruction manual to complete this class , and the Openshift Admin and User guide for 
+Code ready containers.  
+change to the Code-Ready-Containers-linux direcoty and read the CRC-How-to-linux.txt to finish this class. 
+
+Mike McCLure
+mikemcclure@us.ibm.com
+
+
+
+
+
+
+
